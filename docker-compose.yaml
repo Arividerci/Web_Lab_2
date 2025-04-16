@@ -21,7 +21,7 @@ services:
       MYSQL_PASSWORD: "1234"
     volumes:
       - db_data:/var/lib/mysql
-
+      
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
