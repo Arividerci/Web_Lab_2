@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>{{ title }}</h1>
+
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+
+    {% if errors %}
+        <ul class="errors">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="/submit">
+        <input type="text" name="name" placeholder="ФИО" value="{{ old.name ?? '' }}">
+        <input type="email" name="email" placeholder="Email" value="{{ old.email ?? '' }}">
+        <input type="tel" name="phone" placeholder="Телефон" value="{{ old.phone ?? '' }}">
+        <label>Выберите бренд:</label>
+        <select name="brand" id="brand-select">
+            <option disabled selected>Выберите бренд</option>
+            {% for brand in brands %}
+                <option value="{{ brand }}" {{ old.brand == brand ? 'selected' : '' }}>{{ brand }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Модель товара:</label>
+        <select name="model" id="model-select">
+            <option disabled selected>Сначала выберите бренд</option>
+        </select>
+
+        <input type="number" name="quantity" min="1" value="{{ old.quantity ?? 1 }}">
+        <button type="submit">Оформить заказ</button>
+    </form>
+
+    <br>
+    <a href="/orders">
+        <button type="button">Посмотреть заказы</button>
+    </a>
+</div>
+<script>
+    const models = {{ models|json_encode|raw }};
+    const brandSelect = document.getElementById('brand-select');
+    const modelSelect = document.getElementById('model-select');
+
+    brandSelect.addEventListener('change', () => {
+        const selectedBrand = brandSelect.value;
+        const options = models[selectedBrand] || [];
+
+        modelSelect.innerHTML = '';
+        if (options.length > 0) {
+            for (let model of options) {
+                const opt = document.createElement('option');
+                opt.value = model;
+                opt.textContent = model;
+                modelSelect.appendChild(opt);
+            }
+        } else {
+            const opt = document.createElement('option');
+            opt.textContent = 'Моделей нет';
+            modelSelect.appendChild(opt);
+        }
+    });
+
+    // Если форма вернулась с ошибкой — восстановим выбор
+    window.addEventListener('DOMContentLoaded', () => {
+        const oldBrand = "{{ old.brand|default('') }}";
+        const oldModel = "{{ old.model|default('') }}";
+        if (oldBrand && models[oldBrand]) {
+            brandSelect.value = oldBrand;
+            brandSelect.dispatchEvent(new Event('change'));
+            modelSelect.value = oldModel;
+        }
+    });
+</script>
+</body>
+</html>

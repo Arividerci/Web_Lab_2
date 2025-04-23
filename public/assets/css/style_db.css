@@ -28,10 +28,6 @@ h2 {
     margin: 5px;
 }
 
-.button-form button[name="delete_all"] {
-    background-color: #dc3545;
-}
-
 .button-form button:hover {
     background-color: #7000ba;
 }

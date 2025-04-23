@@ -1,0 +1,20 @@
+{
+    "name": "myshop/electronics",
+    "description": "Простой интернет-магазин электроники",
+    "autoload": {
+        "psr-4": {
+            "Myshop\\Electronics\\": "src/"
+        }
+    },
+
+    "authors": [
+        {
+            "name": "Arivi",
+            "email": "nightw.dmitry@mail.ru"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.20",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
