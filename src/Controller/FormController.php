@@ -46,21 +46,36 @@ class FormController {
         ]
     ];
     
+    private function requireAdmin() {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            header('Location: /');
+            exit;
+        }
+    }    
 
     public function __construct() {
         $loader = new FilesystemLoader(__DIR__ . '/../views');
         $this->twig = new Environment($loader);
+
+        $this->twig->addGlobal('session', $_SESSION);
     }
 
     public function orders() {
-        $orderModel = new \Myshop\Electronics\Model\Order();
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            header('Location: /');
+            exit;
+        }
+
+        $orderModel = new Order();
         $orders = $orderModel->all();
-    
+
         echo $this->twig->render('orders.twig', [
             'title' => 'Список заказов',
             'orders' => $orders
         ]);
     }
+
+    
     
     public function delete() {
         $id = $_POST['id'] ?? null;
@@ -98,6 +113,7 @@ class FormController {
         header('Location: /orders');
         exit;
     }
+
     
     public function importCsv() {
         $file = __DIR__ . '/../../orders.csv';
@@ -146,9 +162,9 @@ class FormController {
     
     public function submit() {
         $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'email' => trim($_POST['email'] ?? ''),
-            'phone' => trim($_POST['phone'] ?? ''),
+            'email' => $_SESSION['user']['email'] ?? '',
+            'name' => $_SESSION['user']['name'] ?? '',
+            'phone' => $_SESSION['user']['phone'] ?? '',
             'brand' => trim($_POST['brand'] ?? ''),
             'model' => trim($_POST['model'] ?? ''),
             'quantity' => (int) ($_POST['quantity'] ?? 1)
@@ -164,15 +180,18 @@ class FormController {
         if (!$data['model']) $errors[] = "Укажите модель.";
         if ($data['quantity'] < 1) $errors[] = "Количество должно быть больше 0.";
     
-        if (empty($errors)) {
-            $productModel = new \Myshop\Electronics\Model\Product();
-            $available = $productModel->getStock($data['brand'], $data['model']);
+        // Поиск ID продукта
+        $productModel = new \Myshop\Electronics\Model\Product();
+        $product = $productModel->findByBrandModel($data['brand'], $data['model']);
     
-            if ($available === null) {
-                $errors[] = "Товар не найден в базе.";
-            } elseif ($data['quantity'] > $available) {
-                $errors[] = "Недостаточно товара на складе. В наличии: $available.";
-            }
+        if (!$product) {
+            $errors[] = "Товар не найден.";
+        } elseif ($data['quantity'] > $product['stock']) {
+            $errors[] = "Недостаточно товара на складе. В наличии: {$product['stock']}.";
+        }
+    
+        if (!isset($_SESSION['user'])) {
+            $errors[] = "Вы должны войти в систему, чтобы оформить заказ.";
         }
     
         if (!empty($errors)) {
@@ -187,12 +206,14 @@ class FormController {
         }
     
         $orderModel = new \Myshop\Electronics\Model\Order();
-        $orderModel->create($data);
+        $orderModel->create($_SESSION['user']['id'], $product['id'], $data['quantity']);
+    
         $productModel->decreaseStock($data['brand'], $data['model'], $data['quantity']);
     
         $_SESSION['success'] = "Спасибо, {$data['name']}! Заказ оформлен.";
         header('Location: /');
         exit;
     }
+    
     
 }

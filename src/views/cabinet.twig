@@ -1,0 +1,45 @@
+{% extends "layout.twig" %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/style_cabinet.css">
+{% endblock %}
+
+{% block content %}
+    <div class="cabinet">
+        <h1>Добро пожаловать, {{ user.name }}!</h1>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Роль:</strong> {{ user.role|capitalize }}</p>
+
+        <hr>
+
+        <h2>Ваши заказы</h2>
+
+        {% if orders %}
+            <table class="orders-table">
+            <thead>
+                <tr>
+                <th>Дата</th>
+                <th>Бренд</th>
+                <th>Модель</th>
+                <th>Количество</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.created_at }}</td>
+                    <td>{{ order.brand }}</td>
+                    <td>{{ order.model }}</td>
+                    <td>{{ order.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% else %}
+            <p>Вы ещё не оформляли заказов.</p>
+        {% endif %}
+
+        <p><a href="/logout">Выйти из системы</a></p>
+    </div>
+
+{% endblock %}

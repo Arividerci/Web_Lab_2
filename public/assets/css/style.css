@@ -1,37 +1,56 @@
+
 body {
     font-family: sans-serif;
-    background: #f8f8f8;
     margin: 0;
     padding: 0;
+    background-image: url('/assets/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.2s;
 }
 
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.site-header {
+    background-color: #1240AB;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    animation: fadeInDown 0.4s ease-in-out;
+}
+
+/* Контейнер для содержимого */
 .container {
     max-width: 600px;
-    margin: 30px auto;
+    margin: 120px auto 30px;
     padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-header {
-    background: #9900ff;
-    color: #fff;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 24px;
-}
-
-h3 {
+/* Заголовки */
+h1, h3 {
     text-align: center;
     color: #333;
 }
+
+/* Сообщения */
 .message {
     background: #28a745;
     color: #fff;
@@ -40,6 +59,7 @@ h3 {
     text-align: center;
     margin-bottom: 15px;
 }
+
 .error-message {
     background: #dc3545;
     color: #fff;
@@ -48,11 +68,20 @@ h3 {
     text-align: center;
     margin-bottom: 15px;
 }
+
+/* Форма */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 label {
     font-weight: bold;
     display: block;
     margin: 10px 0 5px;
 }
+
 input, select {
     width: 100%;
     padding: 10px;
@@ -61,13 +90,22 @@ input, select {
     border-radius: 5px;
     font-size: 16px;
 }
+
 input:focus, select:focus {
-    border-color: #9900ff;
+    border-color: #1240AB;
     outline: none;
 }
+
+svg{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
 button {
     width: 100%;
-    background: #9900ff;
+    background: #1240AB;
     color: white;
     padding: 12px;
     font-size: 18px;
@@ -75,9 +113,60 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
+
 button:hover {
-    background: #7000ba;
+    background: #0d2f80;
 }
 
+/* Header - layout */
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
 
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-menu a,
+.login-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover,
+.login-link:hover {
+    color: #ffd700;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/assets/css/style_db.css">
-</head>
-<body>
+{% extends "layout.twig" %}
 
-<h1>{{ title }}</h1>
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/style_db.css">
+{% endblock %}
+
+{% block content %}
+<h1>Список заказов</h1>
 
 <div class="button-form">
     <form method="post" action="/orders/import-rewrite" style="display: inline;">
@@ -23,36 +21,42 @@
     </form>
 </div>
 
+{% if message %}
+    <div class="message">{{ message }}</div>
+{% endif %}
 
-<table>
-  <thead>
-    <tr>
-      <th>Дата</th><th>ФИО</th><th>Email</th><th>Телефон</th>
-      <th>Бренд</th><th>Модель</th><th>Кол-во</th><th>Действие</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in orders %}
-    <tr>
-      <td>{{ order.created_at }}</td>
-      <td>{{ order.name }}</td>
-      <td>{{ order.email }}</td>
-      <td>{{ order.phone }}</td>
-      <td>{{ order.brand }}</td>
-      <td>{{ order.model }}</td>
-      <td>{{ order.quantity }}</td>
-      <td>
-        <div class="button-form">
-            <form method="post" action="/orders/delete" onsubmit="return confirm('Удалить заказ?');">
-                <input type="hidden" name="id" value="{{ order.id }}">
-                <button type="submit" class="btn-delete">Удалить</button>
-            </form>
-        </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+<table class="orders-table">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Пользователь</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Бренд</th>
+            <th>Модель</th>
+            <th>Кол-во</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.created_at }}</td>
+            <td>{{ order.user_name }}</td>
+            <td>{{ order.email }}</td>
+            <td>{{ order.phone }}</td>
+            <td>{{ order.brand }}</td>
+            <td>{{ order.model }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>
+                <form method="post" action="/orders/delete" onsubmit="return confirm('Удалить заказ?');">
+                    <input type="hidden" name="id" value="{{ order.id }}">
+                    <button type="submit" class="btn-delete">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-</body>
-</html>
+{% endblock %}
