@@ -24,6 +24,16 @@ $router->get('/login', [$auth, 'showLogin']);
 $router->post('/login', [$auth, 'login']);    
 $router->get('/logout', [$auth, 'logout']);
 $router->get('/cabinet', [$auth, 'cabinet']);
+$router->get('/orders/export-pdf', [$form, 'exportToPdf']);
+$router->post('/orders/export-excel', [$form, 'exportToExcel']);
+$router->post('/orders/import-rewrite', [$form, 'importCsv']);
+$router->get('/orders/export-csv', [$form, 'exportCsv']);
+
+
+
+
+
+
 
 $router->get('/', function () {
     $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../src/views');
@@ -33,10 +43,5 @@ $router->get('/', function () {
         'title' => 'Главная',
     ]);
 });
-
-
-
-
-
 
 $router->resolve();

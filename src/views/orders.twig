@@ -12,9 +12,10 @@
         <button type="submit" class="btn-import">Импортировать из CSV</button>
     </form>
 
-    <form method="post" action="/orders/export-csv" style="display: inline;">
+    <form method="get" action="/orders/export-csv" style="display: inline;">
         <button type="submit" class="btn-export">Экспортировать в CSV</button>
     </form>
+
 
     <form method="post" action="/orders/delete-all" onsubmit="return confirm('Удалить все заказы?');" style="display: inline;">
         <button type="submit" class="btn-danger">Удалить все заказы</button>
@@ -58,5 +59,13 @@
         {% endfor %}
     </tbody>
 </table>
+<div class="button-form">
+    <form method="post" action="/orders/export-excel" style="display: inline;">
+        <button type="submit" class="btn-export">Экспортировать в Excel</button>
+    </form>
+    <form method="get" action="/orders/export-pdf" style="display: inline;">
+        <button type="submit" class="btn-export">Экспортировать в PDF</button>
+    </form>
+</div>
 
 {% endblock %}

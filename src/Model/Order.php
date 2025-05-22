@@ -40,6 +40,26 @@ class Order
     }
 
 
+    public function findUserByEmail(string $email): ?array {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function findProductByBrandModel(string $brand, string $model): ?array {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE brand = ? AND model = ?");
+        $stmt->execute([$brand, $model]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function insertOrder(int $userId, int $productId, int $quantity, string $createdAt): bool {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO orders (user_id, product_id, quantity, created_at)
+            VALUES (?, ?, ?, ?)
+        ");
+        return $stmt->execute([$userId, $productId, $quantity, $createdAt]);
+    }
+
     public function all(): array {
         $stmt = $this->pdo->query("
             SELECT 
@@ -53,6 +73,25 @@ class Order
         ");
         return $stmt->fetchAll();
     }
+    
+    public function allWithDetails(): array {
+        $stmt = $this->pdo->query("
+            SELECT 
+                o.created_at,
+                u.name AS user_name,
+                u.email,
+                u.phone,
+                p.brand,
+                p.model,
+                o.quantity
+            FROM orders o
+            JOIN users u ON o.user_id = u.id
+            JOIN products p ON o.product_id = p.id
+            ORDER BY o.created_at DESC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
     
     public function deleteAll(): void {

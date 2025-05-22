@@ -16,9 +16,7 @@
 {% endif %}
 
 <form method="post" action="/submit">
-    <input type="text" name="name" placeholder="ФИО" value="{{ old.name ?? '' }}">
-    <input type="email" name="email" placeholder="Email" value="{{ old.email ?? '' }}">
-    <input type="tel" name="phone" placeholder="Телефон" value="{{ old.phone ?? '' }}">
+
 
     <label>Выберите бренд:</label>
     <select name="brand" id="brand-select">
